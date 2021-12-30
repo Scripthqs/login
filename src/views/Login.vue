@@ -63,7 +63,6 @@ export default {
       // if (!this.check(name, pwd)) return
       // console.log(name)
       // console.log(pwd)
-
       // 对密码进行预校验
       if (check(name, pwd)) {
         // 判断密码
