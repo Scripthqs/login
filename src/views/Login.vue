@@ -6,15 +6,15 @@
     </div>
     <form class="login_form">
       <h3>请登录</h3>
-      <label for="username">账号</label>
+      <label for="username">账号（admin）</label>
       <input type="text" v-model="name" placeholder="请输入账号" @input="nameInput">
       <span v-if="error.name" class="err-msg">{{error.name}}</span>
 
-      <label for="password">密码</label>
-      <input type="text" v-model="pwd" placeholder="请输入密码" @input="pwdInput">
+      <label for="password">密码（1234Abc!）</label>
+      <input type="password" v-model="pwd" placeholder="请输入密码" @input="pwdInput">
       <span v-if="error.pwd" class="err-msg">{{error.pwd}}</span>
 
-      <button @click="login">登录</button>
+      <button @click="login" type="button">登录</button>
     </form>
     <div v-show="isShow" class="toast">{{message}}</div>
   </div>
@@ -25,8 +25,8 @@
 export default {
   data () {
     return {
-      name: 'admin',
-      pwd: '1234Abc!',
+      name: '',
+      pwd: '',
       error: {
         name: '',
         pwd: ''
@@ -77,7 +77,7 @@ export default {
           setTimeout(() => {
             this.isShow = false
             this.message = ''
-          }, 3000)
+          }, 2000)
           // alert('账号或密码错误')
         }
       }
