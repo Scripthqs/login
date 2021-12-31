@@ -42,7 +42,7 @@ export default {
       if (!name && !pwd) {
         this.error.name = '请输入账号'
         this.error.pwd = '请输入密码'
-        setTimeout(() => {
+        this.timeout = setTimeout(() => {
           this.error.name = false
           this.error.pwd = false
         }, 3000)
@@ -50,14 +50,14 @@ export default {
       }
       if (!name) {
         this.error.name = '请输入账号'
-        setTimeout(() => {
+        this.timeout = setTimeout(() => {
           this.error.name = false
         }, 3000)
         return false
       }
       if (!pwd) {
         this.error.pwd = '请输入密码'
-        setTimeout(() => {
+        this.timeout = setTimeout(() => {
           this.error.pwd = false
         }, 3000)
         return false
@@ -66,7 +66,7 @@ export default {
         const reg = /^(?![a-zA-Z]+$)(?![A-Z0-9]+$)(?![A-Z\W_]+$)(?![a-z0-9]+$)(?![a-z\W_]+$)(?![0-9\W_]+$)[a-zA-Z0-9\W_]{8,}$/
         // console.log(reg.test(pwd))
         if (!reg.test(pwd)) { this.error.pwd = '密码必须包含大写、小写、数字、特殊字符其三，并且位数不少于8位' }
-        setTimeout(() => {
+        this.timeout = setTimeout(() => {
           this.error.pwd = false
         }, 3000)
         return reg.test(pwd)
@@ -76,10 +76,10 @@ export default {
       // console.log(this)
       this.disabled = true
 
-      // Re-enable after 5 seconds
+      // Re-enable after 3 seconds
       this.timeout = setTimeout(() => {
         this.disabled = false
-      }, 5000)
+      }, 3000)
       const { name, pwd, $router, check } = this
       // if (!this.check(name, pwd)) return
       // console.log(name)
@@ -88,16 +88,16 @@ export default {
       if (check(name, pwd)) {
         // 判断密码
         if (name === 'admin' && pwd === '1234Abc!') {
-          setTimeout(() => {
+          this.timeout = setTimeout(() => {
             $router.push('/home')
           }, 1000)
         } else {
           this.isShow = true
           this.message = '登录失败，账号或密码错误！'
-          setTimeout(() => {
+          this.timeout = setTimeout(() => {
             this.isShow = false
             this.message = ''
-          }, 2000)
+          }, 3000)
           // alert('账号或密码错误')
         }
       }
@@ -114,7 +114,6 @@ export default {
     }
   },
   beforeDestroy () {
-    // clear the timeout before the component is destroyed
     clearTimeout(this.timeout)
   }
 }
@@ -220,6 +219,7 @@ export default {
     position: fixed;
     // background-color: #fff;
     // border: 1px solid red;
+    width: 500px;
     border-radius: 5px;
     font-size: 24px;
     color: red;
