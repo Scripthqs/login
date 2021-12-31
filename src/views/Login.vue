@@ -7,14 +7,14 @@
     <form class="login_form">
       <h3>请登录</h3>
       <label for="username">账号（admin）</label>
-      <input type="text" v-model="name" placeholder="请输入账号" @input="nameInput">
+      <input type="text" v-model="name" placeholder="account " @input="nameInput">
       <span v-if="error.name" class="err-msg">{{error.name}}</span>
 
       <label for="password">密码（1234Abc!）</label>
-      <input type="password" v-model="pwd" placeholder="请输入密码" @input="pwdInput">
+      <input type="password" v-model="pwd" placeholder="password" @input="pwdInput">
       <span v-if="error.pwd" class="err-msg">{{error.pwd}}</span>
 
-      <button @click="login" type="button">登录</button>
+      <button @click="login" type="button" :disabled="disabled">登录</button>
     </form>
     <div v-show="isShow" class="toast">{{message}}</div>
   </div>
@@ -32,7 +32,9 @@ export default {
         pwd: ''
       },
       message: '',
-      isShow: false
+      isShow: false,
+      disabled: false,
+      timeout: null
     }
   },
   methods: {
@@ -40,25 +42,44 @@ export default {
       if (!name && !pwd) {
         this.error.name = '请输入账号'
         this.error.pwd = '请输入密码'
+        setTimeout(() => {
+          this.error.name = false
+          this.error.pwd = false
+        }, 3000)
         return false
       }
       if (!name) {
         this.error.name = '请输入账号'
+        setTimeout(() => {
+          this.error.name = false
+        }, 3000)
         return false
       }
       if (!pwd) {
         this.error.pwd = '请输入密码'
+        setTimeout(() => {
+          this.error.pwd = false
+        }, 3000)
         return false
       }
       if (pwd) {
         const reg = /^(?![a-zA-Z]+$)(?![A-Z0-9]+$)(?![A-Z\W_]+$)(?![a-z0-9]+$)(?![a-z\W_]+$)(?![0-9\W_]+$)[a-zA-Z0-9\W_]{8,}$/
         // console.log(reg.test(pwd))
         if (!reg.test(pwd)) { this.error.pwd = '密码必须包含大写、小写、数字、特殊字符其三，并且位数不少于8位' }
+        setTimeout(() => {
+          this.error.pwd = false
+        }, 3000)
         return reg.test(pwd)
       }
     },
     login () {
       // console.log(this)
+      this.disabled = true
+
+      // Re-enable after 5 seconds
+      this.timeout = setTimeout(() => {
+        this.disabled = false
+      }, 5000)
       const { name, pwd, $router, check } = this
       // if (!this.check(name, pwd)) return
       // console.log(name)
@@ -91,6 +112,10 @@ export default {
         this.error.pwd = false
       }
     }
+  },
+  beforeDestroy () {
+    // clear the timeout before the component is destroyed
+    clearTimeout(this.timeout)
   }
 }
 
@@ -169,7 +194,8 @@ export default {
       font-weight: 300;
     }
     ::placeholder {
-      color: #e5e5e5;
+      // color: #e5e5e5;
+      text-transform: uppercase;
     }
     button {
       margin-top: 50px;
